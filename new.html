@@ -3,29 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interazione con CCG Smart Contract</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
-        }
-        button {
-            margin: 1rem 0;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <title>Interact with CCG Smart Contract</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.3/dist/web3.min.js"></script>
 </head>
 <body>
-    <h1>Interazione con CCG Smart Contract</h1>
-    <p>Indirizzo del contratto: <span id="contractAddress"></span></p>
-    <button id="mintButton">Mint Card</button>
-    <button id="getAllButton">Visualizza tutte le Card</button>
-    <ul id="cardsList"></ul>
+    <button id="mintCard">Mint Card</button>
+    <button id="getAllCardIds">Get All Card IDs</button>
+    <ul id="cardIds"></ul>
 
     <script>
-        const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-
-        const contractABI = [
+        const contractAddress = '0x05090Afba936990e2564aEa180F07d2e13F0b929';
+        const abi = [
             {
                 "inputs": [],
                 "name": "getAllCardIds",
@@ -47,44 +35,39 @@
                 "type": "function"
             }
         ];
-        const contractAddress = "0x05090Afba936990e2564aEa180F07d2e13F0b929";
-        const contract = new web3.eth.Contract(contractABI, contractAddress);
+        const chainId = 534353;
 
-        const mintButton = document.getElementById("mintButton");
-        const getAllButton = document.getElementById("getAllButton");
-        const cardsList = document.getElementById("cardsList");
-        const contractAddressSpan = document.getElementById("contractAddress");
-        contractAddressSpan.textContent = contractAddress;
+        let web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
+        let contract = new web3.eth.Contract(abi, contractAddress);
+
+        async function requestAccount() {
+            await window.ethereum.request({ method: 'eth_requestAccounts', params: [{ chainId: '0x534353' }] });
+        }
 
         async function mintCard() {
+            await requestAccount();
             const accounts = await web3.eth.getAccounts();
-            const fromAddress = accounts[0];
-
-            contract.methods.mintCard().send({ from: fromAddress })
-                .on('transactionHash', (hash) => {
-                    console.log('Transaction hash:', hash);
-                })
-                .on('confirmation', (confirmationNumber, receipt) => {
-                    console.log('Transaction confirmed:', receipt);
-                })
-                .on('error', (error) => {
-                    console.error('Error:', error);
-                });
+            await contract.methods.mintCard().send({ from: accounts[0] });
         }
 
         async function getAllCardIds() {
             const cardIds = await contract.methods.getAllCardIds().call();
-            cardsList.innerHTML = '';
-
-            cardIds.forEach((cardId) => {
-                const li = document.createElement('li');
-                li.textContent = `Card ID: ${cardId}`;
-                cardsList.appendChild(li);
-            });
+            displayCardIds(cardIds);
         }
 
-        mintButton.addEventListener("click", mintCard);
-        getAllButton.addEventListener("click", getAllCardIds);
+        function displayCardIds(cardIds) {
+            const cardIdsList = document.getElementById('cardIds');
+            cardIdsList.innerHTML = '';
+
+            for (const id of cardIds) {
+                const listItem = document.createElement('li');
+                listItem.textContent = id;
+                cardIdsList.appendChild(listItem);
+            }
+        }
+
+        document.getElementById('mintCard').addEventListener('click', mintCard);
+        document.getElementById('getAllCardIds').addEventListener('click', getAllCardIds);
     </script>
 </body>
 </html>

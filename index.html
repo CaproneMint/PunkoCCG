@@ -15,7 +15,7 @@
             });
 
             async function getAccount() {
-                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts', params: [{ chainId: '0x534353' }] });
                 const account = accounts[0];
                 showAccount.innerHTML = account;
             }
