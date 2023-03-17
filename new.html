@@ -69,7 +69,7 @@
         async function mintCard() {
             await requestAccount();
             const accounts = await web3.eth.getAccounts();
-            await contract.methods.mintCard(accounts[0]).send({ from: accounts[0] });
+            await contract.methods.mintCard().send({ from: accounts[0] });
         }
 
         async function getAllCardIds() {
