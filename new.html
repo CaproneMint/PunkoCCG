@@ -7,11 +7,28 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.3/dist/web3.min.js"></script>
 </head>
 <body>
+    <h1>Punko CCG</h1>
+    <button class="enableEthereumButton">Enable Ethereum</button>
+    <h2>Account: <span class="showAccount"></span></h2>
+
     <button id="mintCard">Mint Card</button>
     <button id="getAllCardIds">Get All Card IDs</button>
     <ul id="cardIds"></ul>
 
     <script>
+        const ethereumButton = document.querySelector('.enableEthereumButton');
+        const showAccount = document.querySelector('.showAccount');
+
+        ethereumButton.addEventListener('click', () => {
+            getAccount();
+        });
+
+        async function getAccount() {
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts', params: [{ chainId: '0x534353' }] });
+            const account = accounts[0];
+            showAccount.innerHTML = account;
+        }
+
         const contractAddress = '0x05090Afba936990e2564aEa180F07d2e13F0b929';
         const abi = [
             {
@@ -28,17 +45,21 @@
                 "type": "function"
             },
             {
-                "inputs": [],
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "receiver",
+                        "type": "address"
+                    }
+                ],
                 "name": "mintCard",
                 "outputs": [],
                 "stateMutability": "nonpayable",
                 "type": "function"
             }
         ];
-        const chainId = 534353;
 
-        let web3 = new Web3(new Web3.providers.HttpProvider('https://alpha-rpc.scroll.io/l2'));
-        
+        let web3 = new Web3(Web3.givenProvider);
         let contract = new web3.eth.Contract(abi, contractAddress);
 
         async function requestAccount() {
@@ -48,7 +69,7 @@
         async function mintCard() {
             await requestAccount();
             const accounts = await web3.eth.getAccounts();
-            await contract.methods.mintCard().send({ from: accounts[0] });
+            await contract.methods.mintCard(accounts[0]).send({ from: accounts[0] });
         }
 
         async function getAllCardIds() {
