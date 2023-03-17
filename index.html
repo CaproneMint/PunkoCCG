@@ -2,15 +2,22 @@
     <head></head>
     <body>
         <h1>PunkoCCG</h1>
-        <button onclick="connectWallet()">Connect MetaMask</button>
+        <button class="enableEthereumButton">Enable Ethereum</button>
+        <h2>Account: <span class="showAccount"></span></h2>
 
         <script>
-            function connectWallet() {
-                if (typeof window.ethereum !== 'undefined') {
-                    alert("ok");
-                } else {
-                    alert("no metamask");
-                }
+
+            const ethereumButton = document.querySelector('.enableEthereumButton');
+            const showAccount = document.querySelector('.showAccount');
+
+            ethereumButton.addEventListener('click', () => {
+                getAccount();
+            });
+
+            async function getAccount() {
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                const account = accounts[0];
+                showAccount.innerHTML = account;
             }
         </script>
     </body>
