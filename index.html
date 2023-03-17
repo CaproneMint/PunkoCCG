@@ -1,4 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <h1>Punko CCG</h1>
+        <button class="enableEthereumButton">Enable Ethereum</button>
+        <h2>Account: <span class="showAccount"></span></h2>
+        
+        <script>
+            const ethereumButton = document.querySelector('.enableEthereumButton');
+            const showAccount = document.querySelector('.showAccount');
 
+            ethereumButton.addEventListener('click', () => {
+                getAccount();
+            });
 
             async function getAccount() {
                 const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
