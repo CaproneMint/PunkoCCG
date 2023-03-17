@@ -25,8 +25,29 @@
     <script>
         const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
-        const contractABI = [/* Inserisci qui l'ABI del tuo contratto */];
-        const contractAddress = "/* Inserisci qui l'indirizzo del tuo contratto */";
+        const contractABI = [
+            {
+                "inputs": [],
+                "name": "getAllCardIds",
+                "outputs": [
+                    {
+                        "internalType": "uint256[]",
+                        "name": "",
+                        "type": "uint256[]"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "mintCard",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ];
+        const contractAddress = "0x05090Afba936990e2564aEa180F07d2e13F0b929";
         const contract = new web3.eth.Contract(contractABI, contractAddress);
 
         const mintButton = document.getElementById("mintButton");
