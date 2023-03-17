@@ -7,7 +7,7 @@
         <script>
             function connectWallet() {
                 if (typeof window.ethereum !== 'undefined') {
-                    alert("ok");
+                    ethereum.request({ method: 'eth_requestAccounts' });
                 } else {
                     alert("no metamask");
                 }
