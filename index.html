@@ -1,1 +1,17 @@
+<html>
+    <head></head>
+    <body>
+        <h1>PunkoCCG</h1>
+        <button onclick="connectWallet()">Connect MetaMask</button>
 
+        <script>
+            function connectWallet() {
+                if (typeof window.ethereum !== 'undefined') {
+                    alert("ok");
+                } else {
+                    alert("no metamask");
+                }
+            }
+        </script>
+    </body>
+</html>
