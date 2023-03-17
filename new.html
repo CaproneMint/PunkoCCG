@@ -37,7 +37,8 @@
         ];
         const chainId = 534353;
 
-        let web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
+        let web3 = new Web3(new Web3.providers.HttpProvider('https://alpha-rpc.scroll.io/l2'));
+        
         let contract = new web3.eth.Contract(abi, contractAddress);
 
         async function requestAccount() {
